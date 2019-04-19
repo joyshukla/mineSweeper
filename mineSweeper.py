@@ -1,6 +1,9 @@
 from pprint import pprint
 import random
 from Queue import Queue
+import Tkinter
+
+
 
 class Point:
     def __init__(self):
@@ -14,11 +17,21 @@ class Point:
         else:
             return str(self.val)
 
+    def __str__(self):
+        if self.visible:
+            if self.isBomb:
+                return '*'
+            else:
+                return str(self.val)
+        else:
+            return 'H'
+
 class mineSweeper:
     def __init__(self, gridSize, numOfBombs):
 
         self.gridSize = gridSize
         self.grid = [[None for i in range(gridSize)] for j in range(gridSize)]
+        self.root = Tkinter.Tk()
 
         # initialize the grid
         for r in range(gridSize):
@@ -49,8 +62,24 @@ class mineSweeper:
             self.increment(r + 1, c)
             self.increment(r + 1, c + 1)
 
+        self.displayGrid()
 
-        pprint(self.grid)
+
+        # pprint(self.grid)
+
+    def displayGrid(self):
+        self.root.title('MineSweeper')
+        for r in range(self.gridSize):
+            for c in range(self.gridSize):
+                g = Tkinter.Button(self.root, text=str(self.grid[r][c]), bd=4,
+                               command=lambda row=r, col=c: self.click(row, col))
+                g.grid(row=r, column=c)
+
+        self.root.mainloop()
+
+    def click(self, r, c):
+        self.explore(r,c)
+        self.displayGrid()
 
     def increment(self, r, c):
         if r >= 0 and r < self.gridSize and c >=0 and c < self.gridSize and self.grid[r][c].isBomb == False:
@@ -64,6 +93,9 @@ class mineSweeper:
             print 'Game Over!!'
             print
             self.Print(gameOver = True)
+            for r in range(self.gridSize):
+                for c in range(self.gridSize):
+                    self.grid[r][c].visible = True
             return True
         elif self.grid[r][c].val > 0:
             self.grid[r][c].visible = True
