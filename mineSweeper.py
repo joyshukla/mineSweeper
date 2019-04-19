@@ -26,12 +26,17 @@ class mineSweeper:
                 p = Point()
                 self.grid[r][c] = p
 
-
+        bombs = [(0,0),(3,2), (7,6), (8,9), (4,5)]
+        pprint(bombs)
         # initialize bombs randomly
         # also increment neighbour values
         for i in range(numOfBombs):
             r = random.randrange(gridSize)
             c = random.randrange(gridSize)
+            # print i
+            # b = bombs[i]
+            # r = b[0]
+            # c = b[1]
 
 
             self.grid[r][c].isBomb = True
@@ -48,7 +53,7 @@ class mineSweeper:
         pprint(self.grid)
 
     def increment(self, r, c):
-        if r < self.gridSize and c < self.gridSize and self.grid[r][c].isBomb == False:
+        if r >= 0 and r < self.gridSize and c >=0 and c < self.gridSize and self.grid[r][c].isBomb == False:
             self.grid[r][c].val += 1
 
     def explore(self, r, c):
@@ -94,39 +99,35 @@ class mineSweeper:
             # pop from the queue
             v = traverseQueue.get()
 
-            pprint(v)
-
             r = v[0]
             c = v[1]
 
+
+
             # if r,c in grid
-            if r < self.gridSize and c < self.gridSize:
+            if r >= 0 and r < self.gridSize and c >=0 and c < self.gridSize:
                 # if not visited
                 if not visited[r][c]:
                     # mark it as visited
                     visited[r][c] = True
+                    # print r, c
 
-                    if self.grid[r][r].isBomb:
-                        break
+                    if (self.grid[r][c].isBomb == False) and (self.grid[r][c].val >= 0):
+                        self.grid[r][c].visible = True
 
-                    if self.grid[r][c].val > 0:
-                        break
+                    if (self.grid[r][c].isBomb == False) and (self.grid[r][c].val == 0):
+                        # enqueue the neighbours
 
+                        traverseQueue.put((r - 1, c - 1))
+                        traverseQueue.put((r - 1, c))
+                        traverseQueue.put((r - 1, c + 1))
 
-                    self.grid[r][c].visible = True
+                        traverseQueue.put((r, c - 1))
+                        traverseQueue.put((r, c + 1))
 
-                    # enqueue the neighbours
-
-                    traverseQueue.put((r - 1, c - 1))
-                    traverseQueue.put((r - 1, c))
-                    traverseQueue.put((r - 1, c + 1))
-
-                    traverseQueue.put((r, c - 1))
-                    traverseQueue.put((r, c + 1))
-
-                    traverseQueue.put((r + 1, c - 1))
-                    traverseQueue.put((r + 1, c))
-                    traverseQueue.put((r + 1, c + 1))
+                        traverseQueue.put((r + 1, c - 1))
+                        traverseQueue.put((r + 1, c))
+                        traverseQueue.put((r + 1, c + 1))
 
 
 
