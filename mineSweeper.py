@@ -71,7 +71,7 @@ class mineSweeper:
         self.root.title('MineSweeper')
         for r in range(self.gridSize):
             for c in range(self.gridSize):
-                g = Tkinter.Button(self.root, text=str(self.grid[r][c]), bd=4,
+                g = Tkinter.Button(self.root, text=str(self.grid[r][c]),
                                command=lambda row=r, col=c: self.click(row, col))
                 g.grid(row=r, column=c)
 
