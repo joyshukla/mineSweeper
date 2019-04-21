@@ -2,7 +2,9 @@ from pprint import pprint
 import random
 from Queue import Queue
 import Tkinter
-
+from PIL import ImageTk
+from PIL import Image
+import tkMessageBox
 
 
 class Point:
@@ -39,8 +41,8 @@ class mineSweeper:
                 p = Point()
                 self.grid[r][c] = p
 
-        bombs = [(0,0),(3,2), (7,6), (8,9), (4,5)]
-        pprint(bombs)
+        # bombs = [(0,0),(3,2), (7,6), (8,9), (4,5)]
+        # pprint(bombs)
         # initialize bombs randomly
         # also increment neighbour values
         for i in range(numOfBombs):
@@ -69,10 +71,25 @@ class mineSweeper:
 
     def displayGrid(self):
         self.root.title('MineSweeper')
+        bombImage = Image.open('bomb.png')
+        greyImage = Image.open('grey.png')
+        bombImage = ImageTk.PhotoImage(bombImage)
+        blankImage = ImageTk.PhotoImage(greyImage)
         for r in range(self.gridSize):
             for c in range(self.gridSize):
-                g = Tkinter.Button(self.root, text=str(self.grid[r][c]),
+                g = Tkinter.Button(self.root,
                                command=lambda row=r, col=c: self.click(row, col))
+
+                # g.config(compound="center")
+                if str(self.grid[r][c]) == '*':
+                    g.config(image = bombImage)
+                #if str(self.grid[r][c]) == 'H':
+                #    g.config(image = blankImage, text=' ', compound='center')
+                #else:
+                #    g.config(image = blankImage ,text=str(self.grid[r][c]), compound='center')
+
+                g.config(text=str(self.grid[r][c]))
+                # g.config(height = 3, width = 3)
                 g.grid(row=r, column=c)
 
         self.root.mainloop()
@@ -90,6 +107,7 @@ class mineSweeper:
 
         if self.grid[r][c].isBomb:
             # game over
+            tkMessageBox.showerror('Game Over', 'Game Over!')
             print 'Game Over!!'
             print
             self.Print(gameOver = True)
